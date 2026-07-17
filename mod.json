@@ -8,7 +8,7 @@
 	},
 	"id": "ionion.fakelevelname",
 	"name": "Fake Level Name",
-	"version": "v1.0.0",
+	"version": "v1.0.1",
 	"developer": "Ion Ion",
 	"description": "Replace any level name with a custom one",
 	"dependencies": {

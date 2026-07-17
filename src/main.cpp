@@ -21,7 +21,6 @@ protected:
         m_levelID = numToString(level->m_levelID.value());
         
         this->setTitle("Edit Level Name", "goldFont.fnt", 1.f, 25.f);
-        m_buttonMenu->setPosition({ m_size.width / 2, m_size.height / 2 });
 
         auto trashBtn = CCMenuItemSpriteExtra::create(
             CCSprite::createWithSpriteFrameName("GJ_trashBtn_001.png"),
@@ -146,7 +145,7 @@ class $modify(MyLevelInfoLayer, LevelInfoLayer) {
         newLabel->setAnchorPoint(titleLabel->getAnchorPoint());
         newLabel->setPosition(titleLabel->getPosition());
         newLabel->setScale(titleLabel->getScale());
-        
+
         newLabel->setID("title-label"_spr);
         titleMenu->addChild(newLabel);
  
