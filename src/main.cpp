@@ -7,35 +7,21 @@
 
 using namespace geode::prelude;
 
-class CustomPopup : public FLAlertLayer {
+class CustomPopup : public Popup {
 protected:
     TextInput* m_inputNode = nullptr;
     std::string m_defaultValue = "";
 	std::string m_levelID = "";
 
     bool init(GJGameLevel* level) {
-        if (!FLAlertLayer::init(150)) return false;
+        if (!Popup::init(320.f, 150.f, "square01_001.png")) return false;
 
         this->setID("EditLevelNamePopup");
-		m_defaultValue = level->m_levelName;
-		m_levelID = numToString(level->m_levelID.value());
-
-		auto initialValue = hasValue(m_levelID) ? getValue(m_levelID) : m_defaultValue;
-        CCPoint center = CCDirector::sharedDirector()->getWinSize() / 2;
-
-        auto title = CCLabelBMFont::create("Edit Level Name", "goldFont.fnt");
-        title->setPosition(center + CCPoint{ 0.f, 52.5f });
-        m_mainLayer->addChild(title, 1);
-
-        auto bg = CCScale9Sprite::create("square01_001.png");
-        bg->setContentSize({ 320.f, 150.f });
-        bg->setPosition(center);
-        m_mainLayer->addChild(bg);
-
-        if (!m_buttonMenu) {
-            m_buttonMenu = CCMenu::create();
-            m_mainLayer->addChild(m_buttonMenu);
-        } m_buttonMenu->setPosition({ 0, 0 });
+        m_defaultValue = level->m_levelName;
+        m_levelID = numToString(level->m_levelID.value());
+        
+        this->setTitle("Edit Level Name", "goldFont.fnt", 1.f, 25.f);
+        m_buttonMenu->setPosition({ m_size.width / 2, m_size.height / 2 });
 
         auto trashBtn = CCMenuItemSpriteExtra::create(
             CCSprite::createWithSpriteFrameName("GJ_trashBtn_001.png"),
@@ -45,13 +31,15 @@ protected:
         trashBtn->setScale(0.8f);
         trashBtn->m_baseScale = 0.8f;
 
-        trashBtn->setPosition(center + CCPoint{ -115.f, 5.f });
+        trashBtn->setPosition({ 45.f, m_size.height / 2 });
         m_buttonMenu->addChild(trashBtn);
 
-        m_inputNode = TextInput::create(175.f, "Enter level name...");
-        m_inputNode->setPosition(center + CCPoint{ 0.f, 5.f });
-        m_inputNode->setString(initialValue.c_str());
+        auto initialValue = hasValue(m_levelID) ? getValue(m_levelID) : m_defaultValue;
+        m_inputNode = TextInput::create(170.f, "Enter level name...");
+        m_inputNode->setPosition({ m_size.width / 2, m_size.height / 2 });
+        
         m_inputNode->setMaxCharCount(20);
+        m_inputNode->setString(initialValue.c_str());
         m_mainLayer->addChild(m_inputNode, 1);
 
         auto resetBtn = CCMenuItemSpriteExtra::create(
@@ -59,18 +47,18 @@ protected:
             this, menu_selector(CustomPopup::onReset)
         );
 
-        resetBtn->setPosition(center + CCPoint{ 115.f, 5.f });
-        m_buttonMenu->addChild(resetBtn);
-
         resetBtn->setScale(0.75f);
         resetBtn->m_baseScale = 0.75f;
+
+        resetBtn->setPosition({ m_size.width - 45.f, m_size.height / 2 });
+        m_buttonMenu->addChild(resetBtn);
 
         auto cancelBtn = CCMenuItemSpriteExtra::create(
             ButtonSprite::create("Cancel", "goldFont.fnt", "GJ_button_06.png", 0.8f),
             this, menu_selector(CustomPopup::onCancel)
         );
-        
-        cancelBtn->setPosition(center + CCPoint{ -40.5f, -45.f });
+
+        cancelBtn->setPosition({ (m_size.width / 2) - 35.f, 30.f });
         m_buttonMenu->addChild(cancelBtn);
 
         auto confirmBtn = CCMenuItemSpriteExtra::create(
@@ -78,11 +66,11 @@ protected:
             this, menu_selector(CustomPopup::onConfirm)
         );
 
-        confirmBtn->setPosition(center + CCPoint{ 60.f, -45.f });
+        confirmBtn->setPosition({ (m_size.width / 2) + 55.f, 30.f });
         m_buttonMenu->addChild(confirmBtn);
 
-        this->setTouchEnabled(true);
-        this->setKeypadEnabled(true);
+        m_closeBtn->setVisible(false);
+        m_closeBtn->setEnabled(false);
 
         return true;
     }
@@ -158,6 +146,7 @@ class $modify(MyLevelInfoLayer, LevelInfoLayer) {
         newLabel->setAnchorPoint(titleLabel->getAnchorPoint());
         newLabel->setPosition(titleLabel->getPosition());
         newLabel->setScale(titleLabel->getScale());
+        
         newLabel->setID("title-label"_spr);
         titleMenu->addChild(newLabel);
  
