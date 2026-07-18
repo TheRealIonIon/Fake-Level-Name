@@ -1,6 +1,7 @@
 #include <Geode/Geode.hpp>
 #include <Geode/modify/LevelCell.hpp>
 #include <Geode/modify/PauseLayer.hpp>
+#include <Geode/modify/FLAlertLayer.hpp>
 
 using namespace geode::prelude;
 
@@ -47,4 +48,32 @@ class $modify(PauseLayer) {
             setupLabel();
         });
     }
+};
+
+class $modify(FLAlertLayer) {
+    void onEnter() {
+		FLAlertLayer::onEnter();
+
+		if (this->getID() == "cvolton.betterinfo/ExtendedLevelInfo") {
+            auto layer = CCScene::get()->getChildByID("LevelInfoLayer");
+            auto level = typeinfo_cast<LevelInfoLayer*>(layer)->m_level;
+
+			auto node = this->getChildByIDRecursive("cvolton.betterinfo/level-name-button");
+			auto label = node->getChildByType<CCLabelBMFont>(0);
+			label->setString(getName(level).c_str());
+		} else {
+            auto layer = CCScene::get()->getChildByID("LevelInfoLayer");
+            auto node  = this->getChildByIDRecursive("title");
+            if (!node) node = this->getChildByIDRecursive("title-label");
+
+            if (!node || !layer) return;
+
+            auto label = typeinfo_cast<CCLabelBMFont*>(node);
+            auto level = typeinfo_cast<LevelInfoLayer*>(layer)->m_level;
+
+            if (level && label->getString() == level->m_levelName) {
+                label->setString(getName(level).c_str());
+            }
+        }
+	}
 };

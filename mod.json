@@ -8,9 +8,10 @@
 	},
 	"id": "ionion.fakelevelname",
 	"name": "Fake Level Name",
-	"version": "v1.0.1",
+	"version": "v1.0.2",
 	"developer": "Ion Ion",
 	"description": "Replace any level name with a custom one",
+	"tags": ["customization", "interface", "online"],
 	"dependencies": {
 		"geode.node-ids": ">=v1.20.0"
 	},

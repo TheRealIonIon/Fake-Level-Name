@@ -92,10 +92,14 @@ protected:
         auto titleNode = infoLayer->getChildByIDRecursive("title-label"_spr);
         auto titleLabel = typeinfo_cast<CCLabelBMFont*>(titleNode);
         auto newText = hasValue(m_levelID) ? getValue(m_levelID) : m_defaultValue;
-        
+    
         titleLabel->setString(newText.c_str());
-        titleNode->getParent()->updateLayout();
-        
+
+        if (auto dailyLabel = CCScene::get()->getChildByIDRecursive("daily-label")) {
+            auto xPos = titleLabel->boundingBox().getMaxX();
+            dailyLabel->setPositionX(xPos + 5.f);
+        }
+
         this->keyBackClicked();
     }
 
@@ -137,17 +141,19 @@ class $modify(MyLevelInfoLayer, LevelInfoLayer) {
         auto newText = hasValue(idStr) ? getValue(idStr) : static_cast<std::string>(level->m_levelName);
         auto newLabel = CCLabelBMFont::create(newText.c_str(), "bigFont.fnt");
         newLabel->setColor(typeinfo_cast<CCLabelBMFont*>(titleLabel)->getColor());
-        
-        auto titleMenu = CCMenu::create();
-        titleMenu->setPosition({0, 0});
-        this->addChild(titleMenu);
 
         newLabel->setAnchorPoint(titleLabel->getAnchorPoint());
         newLabel->setPosition(titleLabel->getPosition());
         newLabel->setScale(titleLabel->getScale());
 
         newLabel->setID("title-label"_spr);
-        titleMenu->addChild(newLabel);
+        this->addChild(newLabel, 25);
+
+        if (level->m_dailyID.value() > 0) {
+            auto xPos = newLabel->boundingBox().getMaxX();
+            auto dailyLabel = this->getChildByID("daily-label");
+            if (dailyLabel) dailyLabel->setPositionX(xPos + 5.f);
+        }
  
 		return true;
 	}
