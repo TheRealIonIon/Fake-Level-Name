@@ -1,3 +1,6 @@
+# 1.0.3
+- Removed popup support at index staff request
+
 # 1.0.2
 - Added level info popups support
 - Fixed daily label position
