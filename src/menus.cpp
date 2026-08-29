@@ -21,60 +21,15 @@ class $modify(LevelCell) {
 };
 
 class $modify(PauseLayer) {
-    void setupLabel() {
-        auto node = this->getChildByID("level-name");
-        auto label = typeinfo_cast<CCLabelBMFont*>(node);
-        auto anchor = label->getAnchorPoint();
-        auto pos = label->getPosition();
-        auto color = label->getColor();
-
-        auto name = getName(PlayLayer::get()->m_level);
-        auto title = CCLabelBMFont::create(name.c_str(), "bigFont.fnt");
-
-        title->setID("title-label"_spr);
-        title->setAnchorPoint(anchor);
-        title->setPosition(pos);
-        title->setColor(color);
-        
-        this->addChild(title);
-        label->setVisible(false);
-    }
-
     void customSetup() {
         PauseLayer::customSetup();
+        auto level = PlayLayer::get()->m_level;
 
-        queueInMainThread([this] {
-            setupLabel();
-        });
+        if (level->m_levelType != GJLevelType::Editor) {
+            if (auto title = this->getChildByID("level-name")) {
+                auto label = typeinfo_cast<CCLabelBMFont*>(title);
+                if (label) label->setString(getName(level).c_str());
+            }
+        }
     }
 };
-
-// Commented for now, scheduled removal in the next major update
-// #include <Geode/modify/FLAlertLayer.hpp>
-// class $modify(FLAlertLayer) {
-//     void onEnter() {
-// 		FLAlertLayer::onEnter();
-
-// 		if (this->getID() == "cvolton.betterinfo/ExtendedLevelInfo") {
-//             auto layer = CCScene::get()->getChildByID("LevelInfoLayer");
-//             auto level = typeinfo_cast<LevelInfoLayer*>(layer)->m_level;
-
-// 			auto node = this->getChildByIDRecursive("cvolton.betterinfo/level-name-button");
-// 			auto label = node->getChildByType<CCLabelBMFont>(0);
-// 			label->setString(getName(level).c_str());
-// 		} else {
-//             auto layer = CCScene::get()->getChildByID("LevelInfoLayer");
-//             auto node  = this->getChildByIDRecursive("title");
-//             if (!node) node = this->getChildByIDRecursive("title-label");
-
-//             if (!node || !layer) return;
-
-//             auto label = typeinfo_cast<CCLabelBMFont*>(node);
-//             auto level = typeinfo_cast<LevelInfoLayer*>(layer)->m_level;
-
-//             if (level && label->getString() == level->m_levelName) {
-//                 label->setString(getName(level).c_str());
-//             }
-//         }
-// 	}
-// };
