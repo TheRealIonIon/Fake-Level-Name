@@ -1,3 +1,6 @@
+# 1.0.5
+- Updated to Geode V6 (GD 2.2091)
+
 # 1.0.4
 - Fixed crash when pausing a level
 
